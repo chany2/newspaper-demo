@@ -23,8 +23,9 @@ def index():
 @app.route('/articles/show')
 def show_article():
     url_to_clean = request.args.get('url_to_clean')
-    if not url_to_clean:
-        return redirect(url_for('index'))
+    text_to_clean = request.args.get('text_to_clean')
+    # if not url_to_clean:
+    #     return redirect(url_for('index'))
 
     article = Article(url_to_clean)
     article.download()
@@ -36,6 +37,8 @@ def show_article():
       html_string = "Error converting html to string."
 
     try:
+      # OVERWRITE ARTICLE.TEXT AS TEXT BEFORE NLP
+      article.text = text_to_clean;
       article.nlp()
     except:
       log.error("Couldn't process with NLP")
