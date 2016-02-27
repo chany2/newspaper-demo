@@ -1,5 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for
-from newspaper import Article
+from flask import Flask, request, render_template, redirect, url_for, jsonify
+from newspaper import Article, nlp
 from xml.etree  import ElementTree
 
 app = Flask(__name__)
@@ -10,7 +10,7 @@ import sys
 # Defaults to stdout
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-try: 
+try:
     log.info('Logging to console')
 except:
     _, ex, _ = sys.exc_info()
@@ -19,6 +19,12 @@ except:
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/text/keywords')
+def text_keywords():
+    text_to_clean = request.args.get('text_to_clean')
+    keywords = nlp.keywords(text_to_clean)
+    return jsonify(keywords)
 
 @app.route('/articles/show')
 def show_article():
@@ -44,8 +50,8 @@ def show_article():
       log.error("Couldn't process with NLP")
 
     a = {
-          'html': html_string, 
-         'authors': str(', '.join(article.authors)), 
+          'html': html_string,
+         'authors': str(', '.join(article.authors)),
          'title': article.title,
          'text': article.text,
          'top_image': article.top_image,
@@ -54,4 +60,3 @@ def show_article():
          'summary': article.summary
          }
     return render_template('article/index.html', article=a, url=url_to_clean)
-    
