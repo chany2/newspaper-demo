@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from newspaperdemo import app
 from newspaperdemo.controllers import article
 
