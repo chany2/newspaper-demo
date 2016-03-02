@@ -1,12 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for, jsonify
-from flask.ext.cors import CORS, cross_origin
 from newspaper import Article, nlp
 from xml.etree  import ElementTree
 
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
-
 
 # Debug logging
 import logging
